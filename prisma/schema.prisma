@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  nameAr      String
+  slug        String   @unique
+  icon        String
+  image       String?
+  description String?
+  products    Product[]
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id            String     @id @default(cuid())
+  name          String
+  nameAr        String
+  description   String
+  descriptionAr String
+  price         Float
+  originalPrice Float?
+  image         String
+  images        String     @default("[]")
+  brand         String     @default("عام")
+  brandAr       String     @default("عام")
+  tags          String     @default("[]")
+  tagsAr        String     @default("[]")
+  rating        Float      @default(0)
+  reviewCount   Int        @default(0)
+  stock         Int        @default(100)
+  featured      Boolean    @default(false)
+  categoryId    String
+  category      Category   @relation(fields: [categoryId], references: [id])
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  reviews       Review[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  sessionId String     @unique
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int      @default(1)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+}
+
+model Order {
+  id            String     @id @default(cuid())
+  email         String
+  firstName     String
+  lastName      String
+  address       String
+  city          String
+  state         String    @default("")
+  zipCode       String    @default("")
+  phone         String
+  paymentMethod String     @default("cod")
+  subtotal      Float
+  tax           Float
+  shipping      Float
+  total         Float
+  status        String     @default("pending")
+  items         OrderItem[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  name      String
+  image     String
+  price     Float
+  quantity  Int
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Offer {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String
+  description     String
+  descriptionAr   String
+  image           String    @default("")
+  discountPercent Int       @default(0)
+  badge           String?
+  badgeAr         String?
+  gradient        String    @default("from-orange-500 to-amber-600")
+  ctaText         String    @default("تسوق الآن")
+  ctaTextAr       String    @default("تسوق الآن")
+  link            String?
+  productId       String?
+  active          Boolean   @default(true)
+  startDate       DateTime  @default(now())
+  endDate         DateTime?
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model SiteText {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  valueAr   String
+  group     String   @default("general")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Advertisement {
+  id            String    @id @default(cuid())
+  title         String
+  titleAr       String
+  description   String?
+  descriptionAr String?
+  image         String    @default("")
+  link          String?
+  position      String    @default("banner")
+  active        Boolean   @default(true)
+  startDate     DateTime  @default(now())
+  endDate       DateTime?
+  order         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Currency {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  nameAr       String
+  symbol       String
+  exchangeRate Float    @default(1)
+  isDefault    Boolean  @default(false)
+  active       Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model StoreSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userName  String
+  rating    Int      @default(5)
+  comment   String   @default("")
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

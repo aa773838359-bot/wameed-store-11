@@ -1,0 +1,22 @@
+# robots.txt for Wameed Store (وميض ستور)
+# https://wameedstore.com
+
+User-agent: *
+Allow: /
+Allow: /sitemap.xml
+
+# Disallow admin and internal API routes
+Disallow: /api/admin/
+Disallow: /api/cart/
+Disallow: /api/orders/
+Disallow: /api/seo/
+
+# Disallow unnecessary pages
+Disallow: /checkout
+Disallow: /cart
+
+# Crawl-delay to be polite
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://wameedstore.com/sitemap.xml
