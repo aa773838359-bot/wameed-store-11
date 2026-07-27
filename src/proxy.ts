@@ -133,7 +133,7 @@ function isOriginAllowed(request: NextRequest): boolean {
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // CSRF check on all mutating admin API requests
