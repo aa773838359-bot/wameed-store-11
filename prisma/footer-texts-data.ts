@@ -1,0 +1,17 @@
+export const footerTextsData = [
+  { key: 'footer.phone', value: '+966 50 000 0000', valueAr: '+966 50 000 0000', group: 'footer' },
+  { key: 'footer.address', value: 'Riyadh, Saudi Arabia', valueAr: 'الرياض، المملكة العربية السعودية', group: 'footer' },
+  { key: 'footer.website', value: 'www.zshop.sa', valueAr: 'www.zshop.sa', group: 'footer' },
+  { key: 'footer.about', value: 'Your comprehensive online store. Discover the best products at amazing prices with fast delivery and quality guarantee.', valueAr: 'متجرك الإلكتروني الشامل. اكتشف أفضل المنتجات بأسعار مذهلة مع توصيل سريع وضمان الجودة.', group: 'footer' },
+  { key: 'footer.email', value: 'info@zshop.sa', valueAr: 'info@zshop.sa', group: 'footer' },
+  { key: 'footer.copyright', value: '© 2026 Wameed Store. All rights reserved.', valueAr: '© 2026 وميض ستور. جميع الحقوق محفوظة.', group: 'footer' },
+  { key: 'footer.facebookUrl', value: '', valueAr: '', group: 'footer' },
+  { key: 'footer.twitterUrl', value: '', valueAr: '', group: 'footer' },
+  { key: 'footer.instagramUrl', value: '', valueAr: '', group: 'footer' },
+  { key: 'footer.categoriesTitle', value: 'Categories', valueAr: 'التصنيفات', group: 'footer' },
+  { key: 'footer.linksTitle', value: 'Quick Links', valueAr: 'روابط سريعة', group: 'footer' },
+  { key: 'footer.newsletterTitle', value: 'Newsletter', valueAr: 'النشرة البريدية', group: 'footer' },
+  { key: 'footer.newsletterText', value: 'Subscribe to get the latest offers and discounts', valueAr: 'اشترك ليصلك أحدث العروض والخصومات', group: 'footer' },
+  { key: 'footer.returnPolicy', value: 'Return policy content goes here.', valueAr: 'يمكنك إرجاع أي منتج خلال 14 يوماً من تاريخ الاستلام بشرط أن يكون بحالته الأصلية. يُرجى التواصل مع خدمة العملاء لبدء إجراءات الإرجاع.', group: 'footer' },
+  { key: 'footer.termsConditions', value: 'Terms and conditions content goes here.', valueAr: 'باستخدامك لهذا الموقع فإنك توافق على شروط البيع والاستخدام الخاصة بالمتجر، بما في ذلك سياسات الدفع والشحن والخصوصية. للاستفسارات يرجى التواصل معنا.', group: 'footer' },
+]

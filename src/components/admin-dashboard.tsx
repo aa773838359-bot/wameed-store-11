@@ -634,6 +634,16 @@ function TextsTab() {
     'footer.website': 'الموقع الإلكتروني',
     'footer.about': 'حول المتجر',
     'footer.email': 'البريد الإلكتروني',
+    'footer.copyright': 'نص حقوق النشر',
+    'footer.facebookUrl': 'رابط فيسبوك',
+    'footer.twitterUrl': 'رابط تويتر (X)',
+    'footer.instagramUrl': 'رابط انستغرام',
+    'footer.categoriesTitle': 'عنوان قسم التصنيفات',
+    'footer.linksTitle': 'عنوان الروابط السريعة',
+    'footer.newsletterTitle': 'عنوان النشرة البريدية',
+    'footer.newsletterText': 'نص النشرة البريدية',
+    'footer.returnPolicy': 'محتوى سياسة الإرجاع',
+    'footer.termsConditions': 'محتوى الشروط والأحكام',
   }
 
   const FOOTER_FIELD_ICONS: Record<string, string> = {
@@ -642,7 +652,24 @@ function TextsTab() {
     'footer.website': '🌐',
     'footer.about': 'ℹ️',
     'footer.email': '📧',
+    'footer.copyright': '©️',
+    'footer.facebookUrl': '📘',
+    'footer.twitterUrl': '🐦',
+    'footer.instagramUrl': '📷',
+    'footer.categoriesTitle': '🏷️',
+    'footer.linksTitle': '🔗',
+    'footer.newsletterTitle': '✉️',
+    'footer.newsletterText': '✉️',
+    'footer.returnPolicy': '↩️',
+    'footer.termsConditions': '📄',
   }
+
+  // Fields that use a multi-line textarea instead of a single-line input
+  const FOOTER_TEXTAREA_FIELDS = new Set([
+    'footer.about',
+    'footer.returnPolicy',
+    'footer.termsConditions',
+  ])
 
   const saveFooterMutation = useMutation({
     mutationFn: async () => {
@@ -817,23 +844,23 @@ function TextsTab() {
           <CardContent className="space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               {footerTexts.map((ft) => (
-                <div key={ft.id}>
+                <div key={ft.id} className={ft.key === 'footer.returnPolicy' || ft.key === 'footer.termsConditions' ? 'sm:col-span-2' : undefined}>
                   <Label className="flex items-center gap-2 mb-1">
                     <span>{FOOTER_FIELD_ICONS[ft.key] || '📝'}</span>
                     {FOOTER_FIELD_LABELS[ft.key] || ft.key}
                   </Label>
-                  {ft.key === 'footer.about' ? (
+                  {FOOTER_TEXTAREA_FIELDS.has(ft.key) ? (
                     <Textarea
                       value={footerForm[ft.key] ?? ft.valueAr}
                       onChange={(e) => setFooterForm({ ...footerForm, [ft.key]: e.target.value })}
-                      rows={3}
+                      rows={ft.key === 'footer.about' ? 3 : 4}
                       className="resize-none"
                     />
                   ) : (
                     <Input
                       value={footerForm[ft.key] ?? ft.valueAr}
                       onChange={(e) => setFooterForm({ ...footerForm, [ft.key]: e.target.value })}
-                      dir={ft.key === 'footer.website' || ft.key === 'footer.email' ? 'ltr' : 'rtl'}
+                      dir={ft.key === 'footer.website' || ft.key === 'footer.email' || ft.key.endsWith('Url') ? 'ltr' : 'rtl'}
                     />
                   )}
                 </div>

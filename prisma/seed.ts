@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { footerTextsData } from "./footer-texts-data";
 
 const prisma = new PrismaClient();
 
@@ -975,6 +976,12 @@ async function main() {
     }),
   ]);
 
+  // ── Footer Texts ──
+  // (kept in a shared module so seed.ts and seed-footer.ts never drift apart)
+  await Promise.all(
+    footerTextsData.map((text) => prisma.siteText.create({ data: text }))
+  );
+
   // ── Advertisements ──
   await Promise.all([
     prisma.advertisement.create({
@@ -1043,7 +1050,7 @@ async function main() {
   console.log(`   - ${categories.length} categories`);
   console.log(`   - ${products.length} products`);
   console.log(`   - 4 offers`);
-  console.log(`   - 9 site texts`);
+  console.log(`   - 9 site texts + ${footerTextsData.length} footer texts`);
   console.log(`   - 3 advertisements`);
   console.log(`   - ${currenciesData.length} currencies`);
 }

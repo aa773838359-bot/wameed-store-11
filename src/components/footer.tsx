@@ -6,6 +6,7 @@ import { Mail, Phone, MapPin, Globe, Facebook, Twitter, Instagram } from 'lucide
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useShopStore } from '@/lib/store'
 import { toast } from 'sonner'
 
@@ -15,6 +16,16 @@ interface FooterTexts {
   'footer.website'?: { value: string; valueAr: string }
   'footer.about'?: { value: string; valueAr: string }
   'footer.email'?: { value: string; valueAr: string }
+  'footer.copyright'?: { value: string; valueAr: string }
+  'footer.facebookUrl'?: { value: string; valueAr: string }
+  'footer.twitterUrl'?: { value: string; valueAr: string }
+  'footer.instagramUrl'?: { value: string; valueAr: string }
+  'footer.categoriesTitle'?: { value: string; valueAr: string }
+  'footer.linksTitle'?: { value: string; valueAr: string }
+  'footer.newsletterTitle'?: { value: string; valueAr: string }
+  'footer.newsletterText'?: { value: string; valueAr: string }
+  'footer.returnPolicy'?: { value: string; valueAr: string }
+  'footer.termsConditions'?: { value: string; valueAr: string }
 }
 
 export function Footer() {
@@ -45,6 +56,18 @@ export function Footer() {
   const website = footerTexts?.['footer.website']?.valueAr || 'www.wameedstore.com'
   const about = footerTexts?.['footer.about']?.valueAr || 'متجرك الإلكتروني الشامل. اكتشف أفضل المنتجات بأسعار مذهلة مع توصيل سريع وضمان الجودة.'
   const footerEmail = footerTexts?.['footer.email']?.valueAr || 'info@wameedstore.com'
+  const copyright = footerTexts?.['footer.copyright']?.valueAr || `© ${new Date().getFullYear()} وميض ستور. جميع الحقوق محفوظة.`
+  const facebookUrl = footerTexts?.['footer.facebookUrl']?.valueAr
+  const twitterUrl = footerTexts?.['footer.twitterUrl']?.valueAr
+  const instagramUrl = footerTexts?.['footer.instagramUrl']?.valueAr
+  const categoriesTitle = footerTexts?.['footer.categoriesTitle']?.valueAr || 'التصنيفات'
+  const linksTitle = footerTexts?.['footer.linksTitle']?.valueAr || 'روابط سريعة'
+  const newsletterTitle = footerTexts?.['footer.newsletterTitle']?.valueAr || 'النشرة البريدية'
+  const newsletterText = footerTexts?.['footer.newsletterText']?.valueAr || 'اشترك ليصلك أحدث العروض والخصومات'
+  const returnPolicy = footerTexts?.['footer.returnPolicy']?.valueAr
+  const termsConditions = footerTexts?.['footer.termsConditions']?.valueAr
+
+  const [policyDialog, setPolicyDialog] = useState<{ title: string; content: string } | null>(null)
 
   return (
     <footer className="bg-slate-800 dark:bg-slate-900 text-slate-300 mt-auto">
@@ -61,21 +84,33 @@ export function Footer() {
             </div>
             <p className="text-sm leading-6">{about}</p>
             <div className="flex items-center gap-3 mt-4">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
-                <Facebook className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
-                <Twitter className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
-                <Instagram className="h-4 w-4" />
-              </Button>
+              {facebookUrl && (
+                <a href={facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="فيسبوك">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
+                    <Facebook className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              {twitterUrl && (
+                <a href={twitterUrl} target="_blank" rel="noopener noreferrer" aria-label="تويتر">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
+                    <Twitter className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              {instagramUrl && (
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="انستغرام">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
+                    <Instagram className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
             </div>
           </div>
 
           {/* Categories */}
           <div>
-            <h3 className="text-white font-semibold mb-4">التصنيفات</h3>
+            <h3 className="text-white font-semibold mb-4">{categoriesTitle}</h3>
             <ul className="space-y-2">
               {categories.map((cat) => (
                 <li key={cat.slug}>
@@ -92,19 +127,19 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">روابط سريعة</h3>
+            <h3 className="text-white font-semibold mb-4">{linksTitle}</h3>
             <ul className="space-y-2">
               <li><button onClick={() => setView('orders')} className="text-sm hover:text-orange-400 transition-colors">تتبع الطلب</button></li>
               <li><button onClick={() => setView('wishlist')} className="text-sm hover:text-orange-400 transition-colors">المفضلة</button></li>
-              <li><button className="text-sm hover:text-orange-400 transition-colors">سياسة الإرجاع</button></li>
-              <li><button className="text-sm hover:text-orange-400 transition-colors">الشروط والأحكام</button></li>
+              <li><button onClick={() => setPolicyDialog({ title: 'سياسة الإرجاع', content: returnPolicy || 'سيتم إضافة سياسة الإرجاع قريباً.' })} className="text-sm hover:text-orange-400 transition-colors">سياسة الإرجاع</button></li>
+              <li><button onClick={() => setPolicyDialog({ title: 'الشروط والأحكام', content: termsConditions || 'سيتم إضافة الشروط والأحكام قريباً.' })} className="text-sm hover:text-orange-400 transition-colors">الشروط والأحكام</button></li>
             </ul>
           </div>
 
           {/* Newsletter & Contact */}
           <div>
-            <h3 className="text-white font-semibold mb-4">النشرة البريدية</h3>
-            <p className="text-sm mb-3">اشترك ليصلك أحدث العروض والخصومات</p>
+            <h3 className="text-white font-semibold mb-4">{newsletterTitle}</h3>
+            <p className="text-sm mb-3">{newsletterText}</p>
             <div className="flex gap-2">
               <Input
                 placeholder="بريدك الإلكتروني"
@@ -145,9 +180,20 @@ export function Footer() {
         <Separator className="my-6 bg-slate-700" />
 
         <div className="text-center text-sm text-slate-500">
-          © 2025 وميض ستور. جميع الحقوق محفوظة.
+          {copyright}
         </div>
       </div>
+
+      <Dialog open={!!policyDialog} onOpenChange={(open) => !open && setPolicyDialog(null)}>
+        <DialogContent className="max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{policyDialog?.title}</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm leading-7 whitespace-pre-wrap text-slate-700 dark:text-slate-300">
+            {policyDialog?.content}
+          </p>
+        </DialogContent>
+      </Dialog>
     </footer>
   )
 }
