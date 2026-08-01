@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const storeNameAr = process.env.STORE_NAME || "وميض ستور";
 const storeNameEn = process.env.STORE_NAME_EN || "Wameed Store";
@@ -117,6 +118,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster position="top-center" dir="rtl" />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
