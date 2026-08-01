@@ -13,11 +13,18 @@ import {
   X,
   Coins,
   Shield,
+  MoreVertical,
 } from 'lucide-react'
 import { useShopStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { useQuery } from '@tanstack/react-query'
 
 interface SearchProduct {
@@ -112,10 +119,10 @@ export function Header() {
             }}
             className="flex items-center gap-2 shrink-0"
           >
-            <img src="/logo.png" alt="وميض ستور" className="h-10 w-10 rounded-full object-cover ring-2 ring-orange-500/50 shadow-[0_0_12px_rgba(249,115,22,0.3)]" />
+            <img src="/logo.png" alt="وميض ستور" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover ring-2 ring-orange-500/50 shadow-[0_0_12px_rgba(249,115,22,0.3)]" />
             <div className="flex flex-col leading-tight">
-              <span className="text-lg font-bold text-white">وميض ستور</span>
-              <span className="text-[10px] text-orange-400">متجر إلكتروني</span>
+              <span className="text-base sm:text-lg font-bold text-white">وميض ستور</span>
+              <span className="hidden sm:inline text-[10px] text-orange-400">متجر إلكتروني</span>
             </div>
           </button>
 
@@ -169,7 +176,7 @@ export function Header() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-1 mr-auto">
+          <div className="flex items-center gap-0.5 sm:gap-1 mr-auto">
             {/* Mobile Search Toggle */}
             <Button
               variant="ghost"
@@ -180,9 +187,9 @@ export function Header() {
               {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
             </Button>
 
-            {/* Currency Selector */}
+            {/* Currency Selector - hidden on mobile, moved into the "more" menu */}
             {currencies.length > 1 && (
-              <div className="relative group">
+              <div className="relative group hidden sm:block">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -208,11 +215,11 @@ export function Header() {
               </div>
             )}
 
-            {/* Theme Toggle */}
+            {/* Theme Toggle - hidden on mobile, moved into the "more" menu */}
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:text-orange-400"
+              className="hidden sm:inline-flex text-white hover:text-orange-400"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
               {mounted && (theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
@@ -243,11 +250,11 @@ export function Header() {
               )}
             </Button>
 
-            {/* Admin Login */}
+            {/* Admin Login - hidden on mobile, moved into the "more" menu */}
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:text-orange-400"
+              className="hidden sm:inline-flex text-white hover:text-orange-400"
               onClick={() => setView('admin')}
               title="لوحة التحكم"
             >
@@ -268,6 +275,40 @@ export function Header() {
                 </Badge>
               )}
             </Button>
+
+            {/* Mobile-only "more" menu: currency, theme, admin */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden text-white hover:text-orange-400"
+                >
+                  <MoreVertical className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="sm:hidden">
+                {currencies.length > 1 && currencies.map((currency) => (
+                  <DropdownMenuItem
+                    key={currency.id}
+                    onClick={() => setActiveCurrency(currency.id)}
+                    className={activeCurrencyId === currency.id ? 'text-orange-500 font-bold' : undefined}
+                  >
+                    <Coins className="h-4 w-4 ml-2" />
+                    {currency.symbol} {currency.code}
+                    {currency.isDefault && <span className="text-[10px] text-muted-foreground mr-auto">افتراضية</span>}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuItem onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                  {mounted && theme === 'dark' ? <Sun className="h-4 w-4 ml-2" /> : <Moon className="h-4 w-4 ml-2" />}
+                  {mounted && theme === 'dark' ? 'الوضع الفاتح' : 'الوضع الداكن'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setView('admin')}>
+                  <Shield className="h-4 w-4 ml-2" />
+                  لوحة التحكم
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 

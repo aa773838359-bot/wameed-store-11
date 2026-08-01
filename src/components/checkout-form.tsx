@@ -103,7 +103,7 @@ export function CheckoutForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: `${data.phone}@wameed.customer`, // Generate email from phone since email field doesn't exist
+          email: `${data.phone.replace(/[^0-9]/g, '')}@wameed.customer`, // Generate email from phone (digits only, so it's always a valid email address)
           firstName: data.firstName,
           lastName: data.lastName,
           address: data.address,
@@ -125,7 +125,8 @@ export function CheckoutForm() {
       })
 
       if (!orderRes.ok) {
-        toast.error('حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.')
+        const errJson = await orderRes.json().catch(() => null)
+        toast.error(errJson?.error || 'حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.')
         setIsSending(false)
         return
       }

@@ -2627,19 +2627,27 @@ function SettingsTab() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      const allSettings = [
+        { key: 'whatsappNumber', value: whatsappNumber },
+        { key: 'displayCurrencyId', value: displayCurrencyId },
+        { key: 'manualRateEnabled', value: String(manualRateEnabled) },
+        { key: 'manualExchangeRate', value: manualExchangeRate },
+      ]
+      // Only send settings that actually have a value — an empty value (e.g.
+      // no currency selected yet, or exchange rate left blank while manual
+      // rate is disabled) would otherwise fail server-side validation and
+      // block saving the other settings in the same batch.
+      const settings = allSettings.filter((s) => s.value !== '' && s.value !== null && s.value !== undefined)
+
       const res = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          settings: [
-            { key: 'whatsappNumber', value: whatsappNumber },
-            { key: 'displayCurrencyId', value: displayCurrencyId },
-            { key: 'manualRateEnabled', value: String(manualRateEnabled) },
-            { key: 'manualExchangeRate', value: manualExchangeRate },
-          ],
-        }),
+        body: JSON.stringify({ settings }),
       })
-      if (!res.ok) throw new Error('فشل في حفظ الإعدادات')
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => null)
+        throw new Error(errJson?.error || 'فشل في حفظ الإعدادات')
+      }
       return res.json()
     },
     onSuccess: () => {
@@ -2663,8 +2671,8 @@ function SettingsTab() {
 
       toast.success('تم حفظ الإعدادات بنجاح')
     },
-    onError: () => {
-      toast.error('فشل في حفظ الإعدادات')
+    onError: (error: Error) => {
+      toast.error(error.message || 'فشل في حفظ الإعدادات')
     },
   })
 
