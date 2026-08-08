@@ -67,3 +67,5 @@ prisma/*.db-journal
 *.db-journal
 db/
 dev.db
+.vercel
+.env*
